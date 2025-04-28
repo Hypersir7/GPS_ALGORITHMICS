@@ -3,6 +3,10 @@ package graphs;
 import java.util.ArrayList;
 
 /*
+ * JE VAIS COMPLETER LA MODIFICATION TOMORROW IM DEAD TIRED NOW 
+*/
+
+/*
  * CLASS NODE - REPRESENTE UN SOMMET DANS UN GRAPHE ORIENTEE
  * STRUCTURE : NOEUD = UNIQUE ID + NOM DU NOEUD + LISTE DES ARCS SORTANTS(LES VOISINS DU SOMMET)
  * VERSION BASIQUE POUR L'INSTANT AVEC LES METHODES ESSENTIELLES:
@@ -69,7 +73,7 @@ public class Node {
     public double getX(){
         return this.nodePosition.getX();
     }
-    
+
     public void setX(double newX){
         this.nodePosition.setX(newX);
     }
