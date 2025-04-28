@@ -2,6 +2,8 @@ package tests;
 
 import graphs.Arc;
 import graphs.Node;
+import graphs.Position;
+import javafx.geometry.Pos;
 
 /*
  * TEST LA CLASSE NODE ET LA CLASSE ARC
@@ -12,11 +14,12 @@ import graphs.Node;
 public class testArcNodeSystem {
 
     public static void main(String[] args) {
-        Node bruxelles = new Node("BR", "BRUXELLES");
-        Node liege = new Node("LI", "LIEGE");
-        Node namur = new Node("NA", "NAMUR");
-        Node arlon = new Node("AR", "ARLON");
-        Node ottignies = new Node("OT", "OTTIGNIES");
+        Node bruxelles = new Node("BR", "BRUXELLES", 60.743, 5.743);
+        Node liege = new Node("LI", "LIEGE"); // DEVRAIT AVOIR Positon(0,0)
+        Node namur = new Node("NA", "NAMUR", 55.463, 6.381);
+        Node arlon = new Node("AR", "ARLON"); // DEVRAIT AVOIR Positon(0,0)
+        Node ottignies = new Node("OT", "OTTIGNIES", 60.043, 4.143);
+
         bruxelles.addArc(namur, 87.6);
         bruxelles.addArc(liege, 95.4);
         liege.addArc(namur, 64.4);
@@ -27,6 +30,13 @@ public class testArcNodeSystem {
         displayDistance(arlon);
         displayDistance(namur);
         displayDistance(ottignies);
+
+        // TEST DE POSITION
+        displayNodePosition(liege);
+        displayNodePosition(ottignies);
+        displayDistance(bruxelles);
+        displayDistance(namur);
+        displayNodePosition(arlon);
     }
 
     // AFFICHE LES DISTANES POUR LES ARCS SORTANT D'UN NOEUD DONNE EN PARAMETRE
@@ -51,5 +61,11 @@ public class testArcNodeSystem {
                 " km"
             );
         }
+    }
+
+    public static void displayNodePosition(Node node){
+        Position nodePosition = node.getPosition();
+        System.out.println("Position of: " + node.getNodeName() + "(ID: " + node.getUniqueID()
+         + ") : (" + nodePosition.getX() + "," + nodePosition.getY() + ")");
     }
 }
