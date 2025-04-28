@@ -1,0 +1,21 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "java",
+            "name": "SimpleGraph",
+            "request": "launch",
+            "mainClass": "graphs.SimpleGraph",
+            "projectName": "GPS_ALGORITHMICS_4283c846",
+            "vmArgs": "--module-path lib/javafx-sdk-24.0.1/lib --add-modules javafx.controls,javafx.fxml"
+        },
+        {
+            "type": "java",
+            "name": "MainApp",
+            "request": "launch",
+            "mainClass": "MainApp",
+            "projectName": "GPS_ALGORITHMICS_4283c846",
+            "vmArgs": "--module-path lib/javafx-sdk-24.0.1/lib --add-modules javafx.controls,javafx.fxml"
+        }
+    ]
+}
