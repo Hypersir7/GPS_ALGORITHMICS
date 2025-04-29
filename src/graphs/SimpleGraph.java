@@ -31,26 +31,25 @@ public class SimpleGraph extends Application {
         ArrayList<Node> vertices = graph.getVertices();
         ArrayList<Circle> circles = new ArrayList<>();
         ArrayList<Line> lines = new ArrayList<>();
-        boolean[] isDrawn = new boolean[vertices.size()];
+        //boolean[] isDrawn = new boolean[vertices.size()];
 
         for (int i = 0; i < vertices.size(); i++){
             double x = vertices.get(i).getX();
             double y = vertices.get(i).getY();
             circles.add(new Circle(x, y, 10, Color.LIGHTBLUE));
-            isDrawn[i] = true;
+            //isDrawn[i] = true;
             ArrayList<Arc> neighbours = vertices.get(i).getNeighbours();
 
             Text t = new Text(10, 10, "n : " + neighbours.size());
             pane.getChildren().add(t);
-            
+
             for (int j = 0; j < neighbours.size(); j++){
                 Node neighbour = neighbours.get(j).getDestination();
-                int index = vertices.indexOf(neighbour);
-                if (isDrawn[index]){
-                    double n_x = neighbour.getX();
-                    double n_y = neighbour.getY();
-                    lines.add(new Line(x, y, n_x, n_y));
-                }
+
+                double n_x = neighbour.getX();
+                double n_y = neighbour.getY();
+                lines.add(new Line(x, y, n_x, n_y));
+                
             }
             
         }
@@ -67,8 +66,9 @@ public class SimpleGraph extends Application {
 
         // Add all nodes and edges to the pane
         //pane.getChildren().addAll(edge1, edge2, edge3, node1, node2, node3);
-        pane.getChildren().addAll(circles);
         pane.getChildren().addAll(lines);
+        pane.getChildren().addAll(circles);
+        
 
         // Event handling for dragging
         pane.setOnMousePressed(event -> {
