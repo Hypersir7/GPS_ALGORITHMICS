@@ -1,17 +1,20 @@
 package graphs;
 
+import java.util.ArrayList;
+
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 public class SimpleGraph extends Application {
     private static Graph graph;
     private double initialX, initialY;
-    private double offsetX = 0, offsetY = 0;
+    //private double offsetX = 0, offsetY = 0;
 
     public static void setGraph(Graph g) {
         graph = g;
@@ -25,17 +28,47 @@ public class SimpleGraph extends Application {
     public void start(Stage primaryStage) {
         Pane pane = new Pane();
 
-        // Create nodes and edges for the graph
-        Circle node1 = new Circle(100, 100, 20, Color.LIGHTBLUE);
-        Circle node2 = new Circle(200, 150, 20, Color.LIGHTGREEN);
-        Circle node3 = new Circle(150, 250, 20, Color.LIGHTPINK);
+        ArrayList<Node> vertices = graph.getVertices();
+        ArrayList<Circle> circles = new ArrayList<>();
+        ArrayList<Line> lines = new ArrayList<>();
+        boolean[] isDrawn = new boolean[vertices.size()];
 
-        Line edge1 = new Line(node1.getCenterX(), node1.getCenterY(), node2.getCenterX(), node2.getCenterY());
-        Line edge2 = new Line(node2.getCenterX(), node2.getCenterY(), node3.getCenterX(), node3.getCenterY());
-        Line edge3 = new Line(node3.getCenterX(), node3.getCenterY(), node1.getCenterX(), node1.getCenterY());
+        for (int i = 0; i < vertices.size(); i++){
+            double x = vertices.get(i).getX();
+            double y = vertices.get(i).getY();
+            circles.add(new Circle(x, y, 10, Color.LIGHTBLUE));
+            isDrawn[i] = true;
+            ArrayList<Arc> neighbours = vertices.get(i).getNeighbours();
+
+            Text t = new Text(10, 10, "n : " + neighbours.size());
+            pane.getChildren().add(t);
+            
+            for (int j = 0; j < neighbours.size(); j++){
+                Node neighbour = neighbours.get(j).getDestination();
+                int index = vertices.indexOf(neighbour);
+                if (isDrawn[index]){
+                    double n_x = neighbour.getX();
+                    double n_y = neighbour.getY();
+                    lines.add(new Line(x, y, n_x, n_y));
+                }
+            }
+            
+        }
+        
+
+        // Create nodes and edges for the graph
+        // Circle node1 = new Circle(100, 100, 20, Color.LIGHTBLUE);
+        // Circle node2 = new Circle(200, 150, 20, Color.LIGHTGREEN);
+        // Circle node3 = new Circle(150, 250, 20, Color.LIGHTPINK);
+
+        // Line edge1 = new Line(node1.getCenterX(), node1.getCenterY(), node2.getCenterX(), node2.getCenterY());
+        // Line edge2 = new Line(node2.getCenterX(), node2.getCenterY(), node3.getCenterX(), node3.getCenterY());
+        // Line edge3 = new Line(node3.getCenterX(), node3.getCenterY(), node1.getCenterX(), node1.getCenterY());
 
         // Add all nodes and edges to the pane
-        pane.getChildren().addAll(edge1, edge2, edge3, node1, node2, node3);
+        //pane.getChildren().addAll(edge1, edge2, edge3, node1, node2, node3);
+        pane.getChildren().addAll(circles);
+        pane.getChildren().addAll(lines);
 
         // Event handling for dragging
         pane.setOnMousePressed(event -> {

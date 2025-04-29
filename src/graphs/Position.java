@@ -16,8 +16,8 @@ public class Position {
         this.longitude = newLongitude;
         this.latitude = newLatitude;
         // PAR LA SUITE SERA CALCULE AVEC LES CORDONNEES GPS VERS 'x' ET 'y'
-        this.x = 0; // INITIALISE A 0
-        this.y = 0; // INITIALISE A 0
+        this.x = newLongitude; // INITIALISE A 0 // change ca apres quand la fonction soit prest okay ? 
+        this.y = newLatitude; // INITIALISE A 0
     }
 
     // SETTERS : POUR MODIFIER LES CORDONNEES GPS
