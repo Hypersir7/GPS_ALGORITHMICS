@@ -10,9 +10,9 @@ public class MainApp {
     public static void main(String[] args) {
         // You can call launch here, even if MainApp is in another package.
         Graph g = new Graph();
-        Node n1 = new Node("1", "gare de remich",50,50);
-        Node n2 = new Node("2", "piscine de remich",70,70);
-        Node n3 = new Node("3", "Bech-kleinmacher",90,90);
+        Node n1 = new Node("1", "Gare de remich",50,50);
+        Node n2 = new Node("2", "Piscine de remich",90,90);
+        Node n3 = new Node("3", "Bech-kleinmacher",150,150);
 
         n1.addArc(n2, 0);
         n2.addArc(n3, 0);
