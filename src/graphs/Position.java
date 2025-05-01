@@ -1,4 +1,3 @@
-package graphs;
 
 public class Position {
 
@@ -22,11 +21,11 @@ public class Position {
 
     // SETTERS : POUR MODIFIER LES CORDONNEES GPS
     public void setLongitude(double newLongitude){
-        this.x = newLongitude;
+        this.longitude = newLongitude;
     }
 
     public void setLatitude(double newLatitude){
-        this.x = newLatitude;
+        this.latitude = newLatitude;
     }
 
     // GETTERS : POUR MODIFIER LES CORDONNEES GPS
@@ -42,8 +41,11 @@ public class Position {
     
     public static double[] convertGPSToXY(double longitude, double latitude, double minLongitude,
      double maxLongitude, double minLatitude, double maxLatitude, double screenWidth, double screenHeight){
-        double x = 0; // TO IMPLEMENT USING LONGITUDE VALUES
-        double y = 0; // TO IMPLEMENT USING LATITUDE VALUES
+        // [min, max] -> [0,screenWidth]
+        double x = ((longitude - minLongitude) / (maxLongitude - minLongitude)) * screenWidth;
+
+        // [min, max] -> [0,screenHeight]
+        double y = (1- (latitude - minLatitude) / (maxLatitude - minLatitude)) * screenHeight; // TO IMPLEMENT USING LATITUDE VALUES
         return new double[] {x, y};
     }
 

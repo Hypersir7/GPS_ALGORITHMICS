@@ -1,4 +1,3 @@
-package graphs;
 
 import java.util.ArrayList;
 
@@ -22,3 +21,4 @@ public class Graph {
         return vertices.remove(vertex);
     }
 }
+
