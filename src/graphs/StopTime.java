@@ -1,3 +1,5 @@
+package graphs;
+
 import java.time.LocalTime;
 
 /*

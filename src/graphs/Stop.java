@@ -1,3 +1,4 @@
+package graphs;
 
 /*
  * CLASS 'Stop' : MODELISE UN ARRET

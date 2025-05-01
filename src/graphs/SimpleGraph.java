@@ -1,3 +1,6 @@
+package graphs;
+
+import java.util.ArrayList;
 
 import javafx.application.Application;
 import javafx.scene.Scene;
