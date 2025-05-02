@@ -15,11 +15,42 @@ public class Arc {
     private double weight;
     private Node destination;
 
+    private boolean selected;
+    private int departureTimeInSeconds;
+
+
+
     // CONSTRUCTEUR QUI VA INTIALISER LES ATTRIBUTS
     public Arc(Node startNode, Node endNode, double newWeight) {
         this.source = startNode;
         this.destination = endNode;
         this.weight = newWeight;
+        this.selected = false; // PAR DEFAUT PAS 'SELECTIONE'
+        this.departureTimeInSeconds = 0;
+    }
+
+    public boolean isSelected(){
+        return selected;
+    }
+
+    public int getDepartureTimeInSeconds(){
+        return departureTimeInSeconds;
+    }
+
+    public void setArcSelection(boolean newIsSelected){
+        this.selected = newIsSelected;
+    }
+
+    public void select(){
+        this.selected = true;
+    }
+
+    public void deSelect(){
+        this.selected = false;
+    }
+
+    public void setDepartureTimeInSeconds(int newDepartureTimeInSeconds){
+        this.departureTimeInSeconds = newDepartureTimeInSeconds;
     }
 
     // LES METHODES D'ACCEES AUX ATTRIBUTS (LES GETTERS)
