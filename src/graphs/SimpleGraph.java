@@ -105,12 +105,14 @@ public class SimpleGraph extends Application {
             ArrayList<Arc> neighbours = vertices.get(i).getNeighbours();
 
             for (int j = 0; j < neighbours.size(); j++){
-                Node neighbour = neighbours.get(j).getDestination();
+                if (neighbours.get(j).isSelected()){
+                    Node neighbour = neighbours.get(j).getDestination();
 
-                double n_x = neighbour.getX();
-                double n_y = neighbour.getY();
-                Point2D arrowEndPoint = calculateArrowEndPoint(x, y, n_x, n_y, circlesRadius);
-                arrows.add(new Arrow(x, y, arrowEndPoint.getX(), arrowEndPoint.getY()));
+                    double n_x = neighbour.getX();
+                    double n_y = neighbour.getY();
+                    Point2D arrowEndPoint = calculateArrowEndPoint(x, y, n_x, n_y, circlesRadius);
+                    arrows.add(new Arrow(x, y, arrowEndPoint.getX(), arrowEndPoint.getY()));
+                }
                 
             }
             

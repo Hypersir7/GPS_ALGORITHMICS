@@ -21,12 +21,12 @@ public class Arc {
 
 
     // CONSTRUCTEUR QUI VA INTIALISER LES ATTRIBUTS
-    public Arc(Node startNode, Node endNode, double newWeight) {
+    public Arc(Node startNode, Node endNode, double newWeight, int newDepartureTime) {
         this.source = startNode;
         this.destination = endNode;
         this.weight = newWeight;
         this.selected = false; // PAR DEFAUT PAS 'SELECTIONE'
-        this.departureTimeInSeconds = 0;
+        this.departureTimeInSeconds = newDepartureTime;
     }
 
     public boolean isSelected(){
