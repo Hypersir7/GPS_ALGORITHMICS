@@ -1,7 +1,10 @@
 package graphs;
 
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 
@@ -46,17 +49,27 @@ public class GraphFactory {
         return nodes; // Liste d'OBJECT 'Node' PRET A L'USAGE MODELISANT 'stops.csv'
     }
 
-    public static List<Arc> buildArcs(List<StopTime> stopTimes, List<Node> nodes){
-        List<Arc> arcs = new ArrayList<>();
-        // A VOIR COMMENT ON VA GERER TOUT CELA
-        // MAIS L'IDEE EST LA MEME:
-        // - LIRE LE CSV: 'stop_times.csv' ET RETOURNER UNE LISTE CONTEANT CES OBJECTS DE TYPE 'StopTime'
-        // - ENSUITE DANS 'GraphFactory' CONSTRUIRE ET CONNECTER LES NOEUDS ENSEMBLES
-        // 'stop_times.csv' A CETTE FORME: trip_id,departure_time,stop_id,stop_sequence
-                                        // STIB-124698409288866001,04:29:00,STIB-1780,1
-                                        // STIB-124698409288866001,04:30:00,STIB-6433,2
-                                        
-        return arcs;
+    public static void buildArcs(List<StopTime> stopTimes, List<Node> nodes){
+
+        Map<String, Node> mapNode = new HashMap<>();
+        for (Node n : nodes) {
+            mapNode.put(n.getUniqueID(), n);
+        }
+        Map<String, ArrayList<StopTime>> mapST = new HashMap<>();
+        for (StopTime st : stopTimes){ // l'idee est de separer les st en fonction de leur tripId
+            if (mapST.containsKey(st.getTripID())){ // contient la cle deja 
+                mapST.get(st.getTripID()).add(st);
+            }else{ // pas encore
+                mapST.put(st.getTripID(), new ArrayList<>());
+                mapST.get(st.getTripID()).add(st);
+            }
+        }
+        for (ArrayList<StopTime> sts : mapST.values()){
+            sts.sort(Comparator.comparingInt(StopTime::getStopSequence));
+            for (int i = 0; i < sts.size(); i ++){
+                mapNode.get(sts.get(i).getStopID()).addArc(mapNode.get(sts.get(i + 1).getStopID()), 0);
+            }
+        }
     }
     
 }
