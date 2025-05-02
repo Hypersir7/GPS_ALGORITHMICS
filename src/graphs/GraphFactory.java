@@ -67,7 +67,16 @@ public class GraphFactory {
         for (ArrayList<StopTime> sts : mapST.values()){
             sts.sort(Comparator.comparingInt(StopTime::getStopSequence));
             for (int i = 0; i < sts.size(); i ++){
-                mapNode.get(sts.get(i).getStopID()).addArc(mapNode.get(sts.get(i + 1).getStopID()), 0);
+                if (i + 1 < sts.size()){
+                    mapNode.get(sts.get(i).getStopID()).addArc(mapNode.get(sts.get(i + 1).getStopID()), 0);
+                }
+                
+            }
+            for (int i = sts.size() - 1; i >= 0; i --){
+                if (i - 1 >= 0){
+                    mapNode.get(sts.get(i).getStopID()).addArc(mapNode.get(sts.get(i - 1).getStopID()), 0);
+                }
+                
             }
         }
     }

@@ -20,10 +20,8 @@ public class MainApp {
  
         List<StopTime> stopTimes = CSVReader.loadStopTimes(stopTimesFilePath);
 
-        //CSVReader.displayStopTimes(stopTimes);
-
         List<Node> nodes = GraphFactory.stopsToNodes(stops);
-
+        GraphFactory.buildArcs(stopTimes, nodes);
         Graph g = new Graph();
 
         g.addVertices(nodes);
