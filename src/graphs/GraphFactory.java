@@ -72,12 +72,6 @@ public class GraphFactory {
                 }
                 
             }
-            for (int i = sts.size() - 1; i >= 0; i --){
-                if (i - 1 >= 0){
-                    mapNode.get(sts.get(i).getStopID()).addArc(mapNode.get(sts.get(i - 1).getStopID()), 0);
-                }
-                
-            }
         }
     }
     
