@@ -17,14 +17,12 @@ public class MainApp {
         String stopsFilePath = "src/database/stops.csv";
         String stopTimesFilePath = "src/database/stop_times.csv";
         List<Stop> stops = CSVReader.loadStops(stopsFilePath);
+ 
         List<StopTime> stopTimes = CSVReader.loadStopTimes(stopTimesFilePath);
 
         //CSVReader.displayStopTimes(stopTimes);
 
-        double screenWidth = 4000;
-        double screenHeight = 4000;
-
-        List<Node> nodes = GraphFactory.stopsToNodes(stops, screenWidth, screenHeight);
+        List<Node> nodes = GraphFactory.stopsToNodes(stops);
 
         Graph g = new Graph();
 

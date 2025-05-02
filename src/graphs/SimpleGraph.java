@@ -91,7 +91,16 @@ public class SimpleGraph extends Application {
         for (int i = 0; i < vertices.size(); i++){
             double x = vertices.get(i).getX();
             double y = vertices.get(i).getY();
-            circles.add(new Circle(x, y, circlesRadius, Color.LIGHTBLUE));
+            
+            if (vertices.get(i).getNodeName().equals("TREFLES")){
+                
+                circles.add(new Circle(x, y, circlesRadius, Color.RED));
+
+            }else{
+                circles.add(new Circle(x, y, circlesRadius, Color.LIGHTBLUE));    
+            }
+
+            //circles.add(new Circle(x, y, circlesRadius, Color.LIGHTBLUE));
             texts.add(new Text(x + circlesRadius, y - circlesRadius, vertices.get(i).getNodeName()));
             ArrayList<Arc> neighbours = vertices.get(i).getNeighbours();
 
@@ -134,7 +143,7 @@ public class SimpleGraph extends Application {
         // zoom in and out
 
         final double SCALE_DELTA = 1.1;
-        final double MIN_SCALE = 0.3;
+        final double MIN_SCALE = 0.15;
         final double MAX_SCALE = 4.0;
 
         pane.setOnScroll(event -> {

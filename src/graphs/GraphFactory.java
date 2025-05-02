@@ -7,7 +7,14 @@ import java.util.List;
 
 public class GraphFactory {
     
-    public static List<Node> stopsToNodes(List<Stop> db_stops, double screenWidth, double screenHeight){
+    public static List<Node> stopsToNodes(List<Stop> db_stops){
+        double screenWidth = 10000;
+        double screenHeight = 10000;
+        double scaleX = 1;
+        double scaleY = 1;
+        double offsetX = - (screenWidth / 2);
+        double offsetY = - (screenHeight / 2);
+
         double minLongitude = db_stops.get(0).getLongitude();
         double maxLongitude = minLongitude;
         double minLatitude = db_stops.get(0).getLatitude();
@@ -29,8 +36,8 @@ public class GraphFactory {
         for (Stop stop: db_stops) {
             double[] coordinatesXY = Position.convertGPSToXY(stop.getLongitude(), stop.getLatitude(),
              minLongitude, maxLongitude, minLatitude, maxLatitude, screenWidth, screenHeight);
-            double x = coordinatesXY[0]; // x CONVERTI A PARTIR DE LA LONGITUDE
-            double y = coordinatesXY[1]; // y CONVERTI A PARTIR DE LA LATITUDE
+            double x = coordinatesXY[0] * scaleX + offsetX; // x CONVERTI A PARTIR DE LA LONGITUDE
+            double y = coordinatesXY[1] * scaleY + offsetY; // y CONVERTI A PARTIR DE LA LATITUDE
 
             Node node = new Node(stop.getStopID(), stop.getStopName(), x, y);
             nodes.add(node);
