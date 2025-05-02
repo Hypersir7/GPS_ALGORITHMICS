@@ -18,12 +18,17 @@ public class StopTime {
     private String departureTime;
     private String stopID;
     private int stopSequence;
+
+    private int timeInSeconds;
     
     StopTime(String newTripID, String newDepartureTime, String newStopID, int newStopSequence){
         this.tripID = newTripID;
         this.departureTime = newDepartureTime;
         this.stopID = newStopID;
         this.stopSequence = newStopSequence;
+        
+        int convertedTimeToSec = StopTime.convertTimeToSeconds(newDepartureTime);
+        timeInSeconds = convertedTimeToSec;
     }
 
     // GETTERS POUR ACCEDER AUX DONNEES
@@ -47,5 +52,26 @@ public class StopTime {
         System.out.println("Trip_ID: " + tripID + " | Departure_Time: " + departureTime + " | Stop_ID: "
          + stopID + " | Stop_Sequence: " + stopSequence);   
        }
+    
+    
+    public void setTimeInSeconds(int newTimeInSeconds){
+        this.timeInSeconds = newTimeInSeconds;
+    }
 
+    public int getTimeInSeconds(){
+        return this.timeInSeconds;
+    }
+
+    public static int convertTimeToSeconds(String timeInString){
+        String[] timeParts = timeInString.split(":");
+        if(timeParts.length <= 3){
+            int hour = Integer.parseInt(timeParts[0]);
+            int minutes = Integer.parseInt(timeParts[1]);
+            int seconds = Integer.parseInt(timeParts[2]);
+            return hour * 3600 + minutes * 60 + seconds;
+        }else{
+            System.err.println("Time format is not valide!");
+            return 0;
+        }
+    }
 }

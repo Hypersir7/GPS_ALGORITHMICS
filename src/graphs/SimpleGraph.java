@@ -92,12 +92,12 @@ public class SimpleGraph extends Application {
             double x = vertices.get(i).getX();
             double y = vertices.get(i).getY();
             
-            if (vertices.get(i).getNodeName().equals("TREFLES")){
+            if (vertices.get(i).getNodeName().equals("GARE DU MIDI")){
                 
                 circles.add(new Circle(x, y, circlesRadius, Color.RED));
 
             }else{
-                circles.add(new Circle(x, y, circlesRadius, Color.LIGHTBLUE));    
+                circles.add(new Circle(x, y, circlesRadius, Color.LIGHTGREEN));    
             }
 
             //circles.add(new Circle(x, y, circlesRadius, Color.LIGHTBLUE));
