@@ -3,6 +3,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "Main",
+            "request": "launch",
+            "mainClass": "graphs.Main",
+            "projectName": "GPS_ALGORITHMICS_4283c846"
+        },
+        {
+            "type": "java",
             "name": "SimpleGraph",
             "request": "launch",
             "mainClass": "graphs.SimpleGraph",

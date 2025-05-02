@@ -1,7 +1,5 @@
 package graphs;
 
-import java.time.LocalTime;
-
 /*
  * CLASS 'StopTimes' : MODELISE UN ARRET
  * // 'stop_times.csv' A CETTE FORME: trip_id,departure_time,stop_id,stop_sequence
