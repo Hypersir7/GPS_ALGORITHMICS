@@ -38,8 +38,8 @@ public class Node {
         this.nodePosition = new Position(newX, newY);
     }
     // AJOUTER UN ARC SORTANT VERS UN AUTRE SOMMET AVEC UN POIDS DONNE
-    public void addArc(Node endNode, double weight, int newDepartureTime) {
-        Arc arc = new Arc(this, endNode, weight, newDepartureTime);
+    public void addArc(Node endNode, double weight, int newDepartureTime, String newTransportType) {
+        Arc arc = new Arc(this, endNode, weight, newDepartureTime, newTransportType);
         this.neighbours.add(arc);
     }
 

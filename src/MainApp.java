@@ -1,5 +1,6 @@
 
 import java.util.List;
+import java.util.Map;
 
 import graphs.CSVReader;
 import graphs.Graph;
@@ -16,12 +17,17 @@ public class MainApp {
         
         String stopsFilePath = "src/database/stops.csv";
         String stopTimesFilePath = "src/database/stop_times.csv";
+        String tripsFilePath = "src/database/trips.csv";
+        String routesFilePath = "src/database/routes.csv";
+
         List<Stop> stops = CSVReader.loadStops(stopsFilePath);
- 
         List<StopTime> stopTimes = CSVReader.loadStopTimes(stopTimesFilePath);
+        Map <String, String> trips = CSVReader.loadTrips(tripsFilePath);
+        Map <String, String> routes = CSVReader.loadRoutes(routesFilePath);
+
 
         List<Node> nodes = GraphFactory.stopsToNodes(stops);
-        GraphFactory.buildArcs(stopTimes, nodes);
+        GraphFactory.buildArcs(stopTimes, nodes, trips, routes);
         Graph g = new Graph();
 
         g.addVertices(nodes);

@@ -23,13 +23,13 @@ public class Arc {
 
 
     // CONSTRUCTEUR QUI VA INTIALISER LES ATTRIBUTS
-    public Arc(Node startNode, Node endNode, double newWeight, int newDepartureTime) {
+    public Arc(Node startNode, Node endNode, double newWeight, int newDepartureTime, String newTransportType) {
         this.source = startNode;
         this.destination = endNode;
         this.weight = newWeight;
         this.selected = false; // PAR DEFAUT PAS 'SELECTIONE'
         this.departureTimeInSeconds = newDepartureTime;
-        this.arcTransportType = "UNKNOWN";
+        this.arcTransportType = newTransportType;
     }
 
     public String getTransportType(){

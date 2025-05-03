@@ -12,7 +12,7 @@ public class CSVReader {
     
     public static List<Stop> loadStops(String filePath){
         // DEBUG
-        System.out.println("[DEBUG] current filePath: " + filePath);
+        //System.out.println("[DEBUG] current filePath: " + filePath);
         List<Stop> stops = new ArrayList<Stop>();
         String line;
 
@@ -42,7 +42,7 @@ public class CSVReader {
     public static List<StopTime> loadStopTimes(String filePath){
         List<StopTime> stopTimes = new ArrayList<StopTime>();
         // A IMPLEMENTER DE LA MEME MANIERE QUE 'loadStops'
-        System.out.println("[DEBUG] current filePath: " + filePath);
+        //System.out.println("[DEBUG] current filePath: " + filePath);
         String line;
 
         try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
@@ -70,7 +70,7 @@ public class CSVReader {
 
     public static Map<String, String> loadTrips(String filePath){
         // DEBUG
-        System.out.println("[DEBUG] current filePath: " + filePath);
+        //System.out.println("[DEBUG] current filePath: " + filePath);
         Map<String, String> tripID_RouteID = new HashMap<>();
         String line;
 
@@ -94,7 +94,7 @@ public class CSVReader {
 
     public static Map<String, String> loadRoutes(String filePath){
         // DEBUG
-        System.out.println("[DEBUG] current filePath: " + filePath);
+        //System.out.println("[DEBUG] current filePath: " + filePath);
         Map<String, String> routeID_TransportType = new HashMap<>();
         //route_id,route_short_name,route_long_name,route_type
         //routeID_TransportType = {route_id:route_type}
