@@ -5,9 +5,12 @@ import java.util.ArrayList;
 import javafx.application.Application;
 import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.effect.DropShadow;
+import javafx.scene.effect.Glow;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.geometry.Point2D;
@@ -88,20 +91,35 @@ public class SimpleGraph extends Application {
         ArrayList<Text> texts = new ArrayList<>();
 
         double circlesRadius = 10;
+        
         for (int i = 0; i < vertices.size(); i++){
             double x = vertices.get(i).getX();
             double y = vertices.get(i).getY();
+
+            Circle node = new Circle(x, y, circlesRadius, Color.LIGHTGREEN);
+            circles.add(node);
+            Text txt = new Text(x + circlesRadius, y - circlesRadius, vertices.get(i).getNodeName());
+            texts.add(txt);
+            txt.setOpacity(0.2);
+            txt.setMouseTransparent(true);
             
-            if (vertices.get(i).getNodeName().equals("GARE DU MIDI")){
-                
-                circles.add(new Circle(x, y, circlesRadius, Color.RED));
 
-            }else{
-                circles.add(new Circle(x, y, circlesRadius, Color.LIGHTGREEN));    
-            }
+            node.setOnMouseEntered(event -> {
+                node.setFill(Color.LIGHTCYAN); // quand la souris passe au dessus
+                txt.setOpacity(1);
+                txt.setFont(new Font(16));
+                Glow glow = new Glow(0.8);
+                txt.setEffect(glow);
 
-            //circles.add(new Circle(x, y, circlesRadius, Color.LIGHTBLUE));
-            texts.add(new Text(x + circlesRadius, y - circlesRadius, vertices.get(i).getNodeName()));
+            });
+            node.setOnMouseExited(event -> {
+                node.setFill(Color.LIGHTGREEN);
+                txt.setOpacity(0.2);
+                txt.setFont(new Font(12));
+                txt.setEffect(null);
+            });
+
+            //
             ArrayList<Arc> neighbours = vertices.get(i).getNeighbours();
 
             for (int j = 0; j < neighbours.size(); j++){
@@ -180,6 +198,7 @@ public class SimpleGraph extends Application {
                 }
             }
         });
+
         primaryStage.setTitle("Draggable Graph");
         primaryStage.setScene(scene);
         primaryStage.show();
