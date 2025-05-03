@@ -4,7 +4,9 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class CSVReader {
     
@@ -65,6 +67,58 @@ public class CSVReader {
         }
         return stopTimes;
     }
+
+    public static Map<String, String> loadTrips(String filePath){
+        // DEBUG
+        System.out.println("[DEBUG] current filePath: " + filePath);
+        Map<String, String> tripID_RouteID = new HashMap<>();
+        String line;
+
+        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
+            boolean isHeader = true;
+            while((line = br.readLine()) != null){
+                if(isHeader){
+                    isHeader = false; // ON SKIPPE LA PREMIERE LINGE: LE HEADER(NOMS DES COLONNES)
+                    continue;
+                }
+                String[] data = line.split(",");
+                String tripID = data[0].trim();
+                String routeID = data[1].trim();
+                tripID_RouteID.put(tripID, routeID);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return tripID_RouteID;
+    }
+
+    public static Map<String, String> loadRoutes(String filePath){
+        // DEBUG
+        System.out.println("[DEBUG] current filePath: " + filePath);
+        Map<String, String> routeID_TransportType = new HashMap<>();
+        //route_id,route_short_name,route_long_name,route_type
+        //routeID_TransportType = {route_id:route_type}
+        String line;
+
+        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
+            boolean isHeader = true;
+            while((line = br.readLine()) != null){
+                if(isHeader){
+                    isHeader = false; // ON SKIPPE LA PREMIERE LINGE: LE HEADER(NOMS DES COLONNES)
+                    continue;
+                }
+                String[] data = line.split(",");
+                String routeID = data[0].trim();
+                String routeTransportType = data[3].trim();
+                routeID_TransportType.put(routeID, routeTransportType);
+                
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return routeID_TransportType;
+    }
+
 
     // FONCTION HELPER POUR AFFICHER LES DONNEES ET S'ASSURER QUE 'loadStops' FONCTIONNE BIEN
     public static void displayStops(List<Stop> stops){
