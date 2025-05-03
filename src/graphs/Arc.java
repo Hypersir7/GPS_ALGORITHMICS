@@ -18,6 +18,8 @@ public class Arc {
     private boolean selected;
     private int departureTimeInSeconds;
 
+    private String arcTransportType;
+
 
 
     // CONSTRUCTEUR QUI VA INTIALISER LES ATTRIBUTS
@@ -27,6 +29,14 @@ public class Arc {
         this.weight = newWeight;
         this.selected = false; // PAR DEFAUT PAS 'SELECTIONE'
         this.departureTimeInSeconds = newDepartureTime;
+        this.arcTransportType = "UNKNOWN";
+    }
+
+    public String getTransportType(){
+        return this.arcTransportType;
+    }
+    public void setTransportType(String newTransportType){
+        this.arcTransportType = newTransportType;
     }
 
     public boolean isSelected(){
