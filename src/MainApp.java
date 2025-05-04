@@ -35,13 +35,13 @@ public class MainApp {
         g.addVertices(nodes);
 
         Node source = g.getVertex("STIB-4306"); // etterbeek
-        Node destination = g.getVertex("STIB-5407"); // ulb
-        
+        Node destination = g.getVertex("STIB-4363"); // ulb
+
         System.out.println("Source : " + source.getNodeName());
         System.out.println("Destination : " + destination.getNodeName());
 
         dijkstra dij = new dijkstra();
-        ArrayList<String> chemin =  dij.getShortestPath(g, source, destination, 28800);
+        ArrayList<String> chemin =  dij.getShortestPath(g, source, destination, 8 * 3600 + 15 * 60);
         for (String s : chemin){
             System.out.print(s);
         }
