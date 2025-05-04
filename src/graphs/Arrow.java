@@ -9,9 +9,9 @@ public class Arrow extends Group {
     private final Line line;
     private final Polygon arrowHead;
 
-    public Arrow(double startX, double startY, double endX, double endY) {
+    public Arrow(double startX, double startY, double endX, double endY, Color color) {
         line = new Line(startX, startY, endX, endY);
-        line.setStroke(Color.BLACK);
+        line.setStroke(color);
 
         double arrowLength = 10;
         double arrowWidth = 4;
@@ -31,7 +31,7 @@ public class Arrow extends Group {
         double y2 = endY - arrowLength * sin + arrowWidth * cos;
 
         arrowHead = new Polygon(endX, endY, x1, y1, x2, y2);
-        arrowHead.setFill(Color.BLACK);
+        arrowHead.setFill(color);
 
         getChildren().addAll(line, arrowHead);
     }

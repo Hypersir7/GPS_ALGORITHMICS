@@ -129,7 +129,7 @@ public class SimpleGraph extends Application {
                     double n_x = neighbour.getX();
                     double n_y = neighbour.getY();
                     Point2D arrowEndPoint = calculateArrowEndPoint(x, y, n_x, n_y, circlesRadius);
-                    arrows.add(new Arrow(x, y, arrowEndPoint.getX(), arrowEndPoint.getY()));
+                    arrows.add(new Arrow(x, y, arrowEndPoint.getX(), arrowEndPoint.getY(), Color.RED));
                 }
                 
             }

@@ -1,4 +1,5 @@
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -9,6 +10,7 @@ import graphs.Node;
 import graphs.SimpleGraph;
 import graphs.StopTime;
 import graphs.Stop;
+import algorithms.dijkstra;
 
 public class MainApp {
     
@@ -31,6 +33,18 @@ public class MainApp {
         Graph g = new Graph();
 
         g.addVertices(nodes);
+
+        Node source = g.getVertex("STIB-4306"); // etterbeek
+        Node destination = g.getVertex("STIB-5407"); // ulb
+        
+        System.out.println("Source : " + source.getNodeName());
+        System.out.println("Destination : " + destination.getNodeName());
+
+        dijkstra dij = new dijkstra();
+        ArrayList<String> chemin =  dij.getShortestPath(g, source, destination, 28800);
+        for (String s : chemin){
+            System.out.print(s);
+        }
 
         SimpleGraph.setGraph(g);
         SimpleGraph.draw();
