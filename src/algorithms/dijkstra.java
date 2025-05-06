@@ -23,15 +23,15 @@ public class dijkstra {
         boolean [] isVisited = new boolean[vertices.size()];
         double [] distanceTo = new double[vertices.size()];
         double [] currentTime = new double[vertices.size()];
-        int [] previusVertex = new int[vertices.size()];
+        int [] previousVertex = new int[vertices.size()];
+        Arc [] previousArc = new Arc[vertices.size()];
+
         Arrays.fill(distanceTo, Integer.MAX_VALUE);
         Arrays.fill(currentTime, -1);
-        Arrays.fill(previusVertex, -1);
+        Arrays.fill(previousVertex, -1);
 
         distanceTo[sourceIndex] = 0 ;
         currentTime[sourceIndex] = departureTime;
-
-        ArrayList<Arc> importantArcs = new ArrayList<>();
 
         PriorityQueue<Integer> pq = new PriorityQueue<>(Comparator.comparingDouble(i -> distanceTo[i]));
         pq.add(sourceIndex);
@@ -49,10 +49,9 @@ public class dijkstra {
                 if (distanceTo[idx] + weight < distanceTo[v]){
                     distanceTo[v] = distanceTo[idx] + weight;
                     currentTime[v] = currentTime[idx] + weight;
-                    previusVertex[v] = idx;
+                    previousVertex[v] = idx;
+                    previousArc[v] = arc; // on veut savoir les arcs qu'on a utilise 
 
-                    importantArcs.add(arc); // on veut selectionner les arcs qui constituent le chemin 
-                    //pour les dessiner en rouge sur la carte
                     pq.add(v);
                 }
             }
@@ -66,22 +65,46 @@ public class dijkstra {
             return res;
         }
         ArrayList<Integer> stopsOfPath = new ArrayList<>();
+        ArrayList<Arc> importantArcs = new ArrayList<>();
+
         int currentNode = destinationIndex;
-        while (previusVertex[currentNode] != -1) {
-            res.add(", " + graph.getVertex(currentNode).getNodeName() + "(" + convertSecondsToHours(currentTime[currentNode]) + ")" + graph.getVertex(currentNode).getUniqueID());
+        while (currentNode != -1) {
             stopsOfPath.add(currentNode);
-            currentNode = previusVertex[currentNode];
-        }
-        res.add(source.getNodeName() + "(" + convertSecondsToHours(currentTime[currentNode]) + ")" + source.getUniqueID());
-        stopsOfPath.add(sourceIndex);
-        Collections.reverse(res);
-
-        for (Arc arc : importantArcs){ // on selectionne les arcs importants !!
-            if (stopsOfPath.contains(graph.getVertexIndex(arc.getDestination())) && stopsOfPath.contains(graph.getVertexIndex(arc.getSource()))){
-                arc.select();
+            if (previousArc[currentNode] != null){
+                importantArcs.add(previousArc[currentNode]);
+                previousArc[currentNode].select();
             }
+            currentNode = previousVertex[currentNode];
         }
+        Collections.reverse(stopsOfPath);
+        Collections.reverse(importantArcs);
 
+        int tripLength = 0;
+        String transportShortName = importantArcs.get(0).getRoute().getShortName();
+        int i = 0;
+        for (Arc arc : importantArcs){
+            Node vertexSource = arc.getSource();
+            Node vertexDestination = arc.getDestination();
+            tripLength ++;
+            if ((!arc.getRoute().getShortName().equals(transportShortName))){
+                res.add(vertexSource.getNodeName() + " " + convertSecondsToHours(currentTime[graph.getVertexIndex(vertexSource)]) + "\n");
+                tripLength = 1;
+                transportShortName = arc.getRoute().getShortName();
+                
+            }
+            if (i == importantArcs.size() - 1){
+                res.add(vertexDestination.getNodeName() + " " + convertSecondsToHours(currentTime[graph.getVertexIndex(vertexDestination)]) + "\n");
+                break;
+            }
+
+            if (tripLength == 1 && i != importantArcs.size() - 1){
+                res.add("Take " + arc.getRoute().getRouteID().substring(0, 4) + " " +
+                arc.getRoute().getTransportType() + " " + arc.getRoute().getShortName() + " from " + 
+                vertexSource.getNodeName() + " " + convertSecondsToHours(currentTime[graph.getVertexIndex(vertexSource)]) + " to ");
+
+            }
+            i ++;
+        }
 
         return res;
     }

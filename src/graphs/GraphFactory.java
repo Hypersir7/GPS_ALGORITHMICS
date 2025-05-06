@@ -49,7 +49,7 @@ public class GraphFactory {
         return nodes; // Liste d'OBJECT 'Node' PRET A L'USAGE MODELISANT 'stops.csv'
     }
 
-    public static void buildArcs(List<StopTime> stopTimes, List<Node> nodes, Map<String, String> trips, Map<String, String> routes){
+    public static void buildArcs(List<StopTime> stopTimes, List<Node> nodes, Map<String, String> trips, Map<String, Route> routes){
 
         Map<String, Node> mapNode = new HashMap<>();
         for (Node n : nodes) {
@@ -71,7 +71,8 @@ public class GraphFactory {
                     mapNode.get(sts.get(i).getStopID()).addArc(mapNode.get(sts.get(i + 1).getStopID()),
                     sts.get(i + 1).getTimeInSeconds() - sts.get(i).getTimeInSeconds(), 
                     sts.get(i).getTimeInSeconds(),
-                    routes.get(trips.get(sts.get(i).getTripID())));
+                    routes.get(trips.get(sts.get(i).getTripID()))
+                    );
                 }
                 
             }

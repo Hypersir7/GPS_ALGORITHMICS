@@ -9,6 +9,27 @@ import java.util.List;
 import java.util.Map;
 
 public class CSVReader {
+
+    public static ArrayList<String> splitLine(String line, String del){
+        ArrayList<String> res = new ArrayList<>();
+        String word = "";
+        boolean splitOn = true;
+        for (int i = 0; i < line.length(); i++){
+            if (line.charAt(i) == '\"'){
+                splitOn = !splitOn;
+                continue;
+            }
+            if (splitOn && line.charAt(i) == del.charAt(0)){
+                res.add(word);
+                word = "";
+                continue;
+            }
+            word += line.charAt(i);
+        }
+        if (!word.isEmpty())
+            res.add(word);
+        return res;
+    }
     
     public static List<Stop> loadStops(String filePath){
         // DEBUG
@@ -23,12 +44,12 @@ public class CSVReader {
                     isHeader = false; // ON SKIPPE LA PREMIERE LINGE: LE HEADER(NOMS DES COLONNES)
                     continue;
                 }
-                String[] data = line.split(",");
+                ArrayList<String> data = splitLine(line, ",");
                 
-                String stopID = data[0].trim();
-                String stopName = data[1].trim();
-                double stopLongitude = Double.parseDouble(data[2].trim());
-                double stopLatitude = Double.parseDouble(data[3].trim());
+                String stopID = data.get(0).trim();
+                String stopName = data.get(1).trim();
+                double stopLongitude = Double.parseDouble(data.get(2).trim());
+                double stopLatitude = Double.parseDouble(data.get(3).trim());
                 Stop stopObject = new Stop(stopID, stopName, stopLongitude, stopLatitude);
                 stops.add(stopObject);
                 
@@ -92,10 +113,10 @@ public class CSVReader {
         return tripID_RouteID;
     }
 
-    public static Map<String, String> loadRoutes(String filePath){
+    public static Map<String, Route> loadRoutes(String filePath){
         // DEBUG
         //System.out.println("[DEBUG] current filePath: " + filePath);
-        Map<String, String> routeID_TransportType = new HashMap<>();
+        Map<String, Route> RouteIdRoute = new HashMap<>();
         //route_id,route_short_name,route_long_name,route_type
         //routeID_TransportType = {route_id:route_type}
         String line;
@@ -107,16 +128,19 @@ public class CSVReader {
                     isHeader = false; // ON SKIPPE LA PREMIERE LINGE: LE HEADER(NOMS DES COLONNES)
                     continue;
                 }
-                String[] data = line.split(",");
-                String routeID = data[0].trim();
-                String routeTransportType = data[3].trim();
-                routeID_TransportType.put(routeID, routeTransportType);
+                ArrayList<String> data = splitLine(line, ",");
+                String routeID = data.get(0).trim();
+                String shortName = data.get(1).trim();
+                String longName = data.get(2).trim();
+                String routeTransportType = data.get(3).trim();
+                
+                RouteIdRoute.put(routeID, new Route(routeID, shortName, longName, routeTransportType));
                 
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return routeID_TransportType;
+        return RouteIdRoute;
     }
 
 

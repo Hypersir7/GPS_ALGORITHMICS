@@ -18,25 +18,26 @@ public class Arc {
     private boolean selected;
     private int departureTimeInSeconds;
 
-    private String arcTransportType;
+    private Route route;
 
 
 
     // CONSTRUCTEUR QUI VA INTIALISER LES ATTRIBUTS
-    public Arc(Node startNode, Node endNode, double newWeight, int newDepartureTime, String newTransportType) {
+    public Arc(Node startNode, Node endNode, double newWeight, int newDepartureTime, Route newRoute) {
         this.source = startNode;
         this.destination = endNode;
         this.weight = newWeight;
         this.selected = false; // PAR DEFAUT PAS 'SELECTIONE'
         this.departureTimeInSeconds = newDepartureTime;
-        this.arcTransportType = newTransportType;
+        this.route = newRoute;
     }
 
-    public String getTransportType(){
-        return this.arcTransportType;
+    public Route getRoute(){
+        return this.route;
     }
-    public void setTransportType(String newTransportType){
-        this.arcTransportType = newTransportType;
+
+    public void setTransportCompany(Route newRoute){
+        this.route = newRoute;
     }
 
     public boolean isSelected(){
