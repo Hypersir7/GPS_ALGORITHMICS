@@ -11,8 +11,8 @@ import java.util.Map;
 public class GraphFactory {
     
     public static List<Node> stopsToNodes(List<Stop> db_stops){
-        double screenWidth = 10000;
-        double screenHeight = 10000;
+        double screenWidth = 50000;
+        double screenHeight = 50000;
         double scaleX = 1;
         double scaleY = 1;
         double offsetX = - (screenWidth / 2);

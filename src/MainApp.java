@@ -1,5 +1,7 @@
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -7,9 +9,11 @@ import graphs.CSVReader;
 import graphs.Graph;
 import graphs.GraphFactory;
 import graphs.Node;
+import graphs.NodeMaker;
 import graphs.Route;
 import graphs.SimpleGraph;
 import graphs.StopTime;
+import tools.Split;
 import graphs.Stop;
 import algorithms.dijkstra;
 
@@ -38,56 +42,33 @@ public class MainApp {
         String TECTripsFilePath = "src/database/GTFS/TEC/trips.csv";
         String TECRoutesFilePath = "src/database/GTFS/TEC/routes.csv";
 
-        List<Stop> Delijn_stops = CSVReader.loadStops(DELIJNStopsFilePath);
-        // List<StopTime> Delijn_stopTimes = CSVReader.loadStopTimes(DELIJNStopTimesFilePath);
-        // Map <String, String> Delijn_trips = CSVReader.loadTrips(DELIJNTripsFilePath);
-        // Map <String, Route> Delijn_routes = CSVReader.loadRoutes(DELIJNRoutesFilePath);
 
-        List<Stop> Sncb_stops = CSVReader.loadStops(SNCBStopsFilePath);
-        // List<StopTime> Sncb_stopTimes = CSVReader.loadStopTimes(SNCBStopTimesFilePath);
-        // Map <String, String> Sncb_trips = CSVReader.loadTrips(SNCBTripsFilePath);
-        // Map <String, Route> Sncb_routes = CSVReader.loadRoutes(SNCBRoutesFilePath);
+        long start = System.currentTimeMillis();
+        NodeMaker nm = new NodeMaker(DELIJNStopsFilePath, SNCBStopsFilePath, STIBStopsFilePath, TECStopsFilePath);
+        long end = System.currentTimeMillis();
+        System.out.println(end - start);
 
-        List<Stop> Stib_stops = CSVReader.loadStops(STIBStopsFilePath);
-        // List<StopTime> Stib_stopTimes = CSVReader.loadStopTimes(STIBStopTimesFilePath);
-        // Map <String, String> Stib_trips = CSVReader.loadTrips(STIBTripsFilePath);
-        // Map <String, Route> Stib_routes = CSVReader.loadRoutes(STIBRoutesFilePath);
+        System.out.println("Size : " + nm.getSize());
 
-        List<Stop> Tec_stops = CSVReader.loadStops(TECStopsFilePath);
-        // List<StopTime> Tec_stopTimes = CSVReader.loadStopTimes(TECStopTimesFilePath);
-        // Map <String, String> Tec_trips = CSVReader.loadTrips(TECTripsFilePath);
-        // Map <String, Route> Tec_routes = CSVReader.loadRoutes(TECRoutesFilePath);
-
-        List<Node> Delijn_nodes = GraphFactory.stopsToNodes(Delijn_stops);
-        //GraphFactory.buildArcs(Delijn_stopTimes, Delijn_nodes, Delijn_trips, Delijn_routes);
-
-        List<Node> Sncb_nodes = GraphFactory.stopsToNodes(Sncb_stops);
-        //GraphFactory.buildArcs(Sncb_stopTimes, Sncb_nodes, Sncb_trips, Sncb_routes);
-
-        List<Node> Stib_nodes = GraphFactory.stopsToNodes(Stib_stops);
-        //GraphFactory.buildArcs(Stib_stopTimes, Stib_nodes, Stib_trips, Stib_routes);
-
-        List<Node> Tec_nodes = GraphFactory.stopsToNodes(Tec_stops);
-        //GraphFactory.buildArcs(Tec_stopTimes, Tec_nodes, Tec_trips, Tec_routes);
+        ArrayList<Node> nodes = new ArrayList<>();
+        nodes.add(nm.makeNode("STIB-4306"));
+        nodes.add(nm.makeNode("STIB-1293"));
 
         Graph g = new Graph();
-        g.addVertices(Delijn_nodes);
-        g.addVertices(Sncb_nodes);
-        g.addVertices(Stib_nodes);
-        g.addVertices(Tec_nodes);
+        g.addVertices(nodes);
 
 
-        Node source = g.getVertex("STIB-1293"); // gare du nord
-        Node destination = g.getVertex("STIB-4306"); // etterbeek
+        // Node source = g.getVertex("STIB-1293"); // gare du nord
+        // Node destination = g.getVertex("STIB-4306"); // etterbeek
 
-        System.out.println("Source : " + source.getNodeName());
-        System.out.println("Destination : " + destination.getNodeName());
+        // System.out.println("Source : " + source.getNodeName());
+        // System.out.println("Destination : " + destination.getNodeName());
 
-        dijkstra dij = new dijkstra();
-        ArrayList<String> chemin =  dij.getShortestPath(g, source, destination, 8 * 3600 + 15 * 60);
-        for (String s : chemin){
-            System.out.print(s);
-        }
+        // dijkstra dij = new dijkstra();
+        // ArrayList<String> chemin =  dij.getShortestPath(g, source, destination, 8 * 3600 + 15 * 60);
+        // for (String s : chemin){
+        //     System.out.print(s);
+        // }
 
         SimpleGraph.setGraph(g);
         SimpleGraph.draw();
