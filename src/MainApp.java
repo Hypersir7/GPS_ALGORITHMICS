@@ -1,20 +1,13 @@
 
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
 
-import graphs.CSVReader;
 import graphs.Graph;
-import graphs.GraphFactory;
 import graphs.Node;
 import graphs.NodeMaker;
-import graphs.Route;
+import graphs.RouteMaker;
 import graphs.SimpleGraph;
-import graphs.StopTime;
-import tools.Split;
-import graphs.Stop;
+import graphs.TripMaker;
+
 import algorithms.dijkstra;
 
 public class MainApp {
@@ -45,10 +38,18 @@ public class MainApp {
 
         long start = System.currentTimeMillis();
         NodeMaker nm = new NodeMaker(DELIJNStopsFilePath, SNCBStopsFilePath, STIBStopsFilePath, TECStopsFilePath);
+        TripMaker tm = new TripMaker(DELIJNTripsFilePath, SNCBTripsFilePath, STIBTripsFilePath, TECTripsFilePath);
+        RouteMaker rm = new RouteMaker(DELIJNRoutesFilePath, SNCBRoutesFilePath, STIBRoutesFilePath, TECRoutesFilePath);
+
+        nm.sync(); tm.sync(); rm.sync();
+
         long end = System.currentTimeMillis();
         System.out.println(end - start);
 
-        System.out.println("Size : " + nm.getSize());
+        nm.calcMaxMinLongLat();
+        
+        int size = nm.getSize() + tm.getSize() + rm.getSize();
+        System.out.println("Size : " + size);
 
         ArrayList<Node> nodes = new ArrayList<>();
         nodes.add(nm.makeNode("STIB-4306"));

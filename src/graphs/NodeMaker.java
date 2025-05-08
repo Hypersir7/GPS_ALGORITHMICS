@@ -1,9 +1,7 @@
 package graphs;
 
-import java.io.IOException;
-import java.util.ArrayList;
-
 import database.IndexedFileReader;
+import tools.Split;
 
 public class NodeMaker {
     String delijnPath;
@@ -16,13 +14,18 @@ public class NodeMaker {
     IndexedFileReader stib ;
     IndexedFileReader tec ;
 
+    Thread t1 ;
+    Thread t2 ;
+    Thread t3 ;
+    Thread t4 ;
+
     double maxLongitude = Double.MIN_VALUE;
     double minLongitude = Double.MAX_VALUE;
     double maxLatitude = Double.MIN_VALUE;
     double minLatitude = Double.MAX_VALUE;
 
-    double screenWidth = 900; // 50000
-    double screenHeight = 900; // 50000
+    double screenWidth = 1000; // 50000
+    double screenHeight = 1000; // 50000
     double scaleX = 1;
     double scaleY = 1;
     double offsetX = - (screenWidth / 2);
@@ -34,37 +37,25 @@ public class NodeMaker {
         stibPath = p3;
         tecPath = p4;
 
-        Thread t1 = new Thread(() -> {
-            deljin = new IndexedFileReader(p1, 0, true);
+        t1 = new Thread(() -> {
+            deljin = new IndexedFileReader(delijnPath, 0, true);
         });
-        Thread t2 = new Thread(() -> {
-            sncb = new IndexedFileReader(p2, 0, true);
+        t2 = new Thread(() -> {
+            sncb = new IndexedFileReader(sncbPath, 0, true);
         });
-        Thread t3 = new Thread(() -> {
-            stib = new IndexedFileReader(p3, 0, true);
+        t3 = new Thread(() -> {
+            stib = new IndexedFileReader(stibPath, 0, true);
         });
-        Thread t4 = new Thread(() -> {
-            tec = new IndexedFileReader(p4,  0, true);
+        t4 = new Thread(() -> {
+            tec = new IndexedFileReader(tecPath,  0, true);
         });
         t1.start();
         t2.start();
         t3.start();
         t4.start();
         
-        try{
-            t1.join();
-            t2.join();
-            t3.join();
-            t4.join();
-        }catch(InterruptedException e){
-            e.printStackTrace();
-        }
-        maxLongitude = Math.max(Math.max(deljin.getMaxLongitude(), sncb.getMaxLongitude()), Math.max(stib.getMaxLongitude(), tec.getMaxLongitude()));
-        maxLatitude = Math.max(Math.max(deljin.getMaxLatitude(), sncb.getMaxLatitude()), Math.max(stib.getMaxLatitude(), tec.getMaxLatitude()));
-
-        minLongitude = Math.min(Math.min(deljin.getMinLongitude(), sncb.getMinLongitude()), Math.min(stib.getMinLongitude(), tec.getMinLongitude()));
-        minLatitude = Math.min(Math.min(deljin.getMinLatitude(), sncb.getMinLatitude()), Math.min(stib.getMinLatitude(), tec.getMinLatitude()));
     }
+
     public Node makeNode (String nodeId){
         String company = nodeId.split("-")[0];
         Node n = null;
@@ -85,14 +76,14 @@ public class NodeMaker {
                 break;
         }
         if (!line.equals("")){
-            ArrayList<String> tmp = CSVReader.splitLine(line, ",");
+            String [] tmp = Split.splitLine(line, ",", 4);
 
-            double[] coordinatesXY = Position.convertGPSToXY(Double.parseDouble(tmp.get(2)), Double.parseDouble(tmp.get(3)),
+            double[] coordinatesXY = Position.convertGPSToXY(Double.parseDouble(tmp[2]), Double.parseDouble(tmp[3]),
              minLongitude, maxLongitude, minLatitude, maxLatitude, screenWidth, screenHeight);
             double x = coordinatesXY[0] * scaleX + offsetX; // x CONVERTI A PARTIR DE LA LONGITUDE
             double y = coordinatesXY[1] * scaleY + offsetY; // y CONVERTI A PARTIR DE LA LATITUDE
 
-            n = new Node(nodeId, tmp.get(1), x, y);
+            n = new Node(nodeId, tmp[1], x, y);
         }
         return n;
     }
@@ -100,4 +91,23 @@ public class NodeMaker {
         return deljin.getSize() + sncb.getSize() + stib.getSize() + tec.getSize();
     }
     
+    public void sync(){
+        try{
+            t1.join();
+            t2.join();
+            t3.join();
+            t4.join();
+        }catch(InterruptedException e){
+            e.printStackTrace();
+        }
+    }
+
+    public void calcMaxMinLongLat(){
+        maxLongitude = Math.max(Math.max(deljin.getMaxLongitude(), sncb.getMaxLongitude()), Math.max(stib.getMaxLongitude(), tec.getMaxLongitude()));
+        maxLatitude = Math.max(Math.max(deljin.getMaxLatitude(), sncb.getMaxLatitude()), Math.max(stib.getMaxLatitude(), tec.getMaxLatitude()));
+
+        minLongitude = Math.min(Math.min(deljin.getMinLongitude(), sncb.getMinLongitude()), Math.min(stib.getMinLongitude(), tec.getMinLongitude()));
+        minLatitude = Math.min(Math.min(deljin.getMinLatitude(), sncb.getMinLatitude()), Math.min(stib.getMinLatitude(), tec.getMinLatitude()));
+    
+    }
 }
