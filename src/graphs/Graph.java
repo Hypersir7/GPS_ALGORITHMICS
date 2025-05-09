@@ -58,8 +58,8 @@ public class Graph {
         return this.IndexNodeHashMap.get(index);
     }
 
-    public Node getVertex(String NodeName){
-        return this.IDNodeHashMap.get(NodeName);
+    public Node getVertex(String NodeID){
+        return this.IDNodeHashMap.get(NodeID);
     }
     private void HashMapNodes(){
         HashMap<Node, Integer> hashMapNodeIndex = new HashMap<>();

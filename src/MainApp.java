@@ -41,15 +41,15 @@ public class MainApp {
         SortStopTimes sstStib = new SortStopTimes(STIBStopTimesFilePath); sstStib.sort();
         SortStopTimes sstTec = new SortStopTimes(TECStopTimesFilePath); sstTec.sort();
         long end = System.currentTimeMillis();
-
-        System.out.println(end - start);
+        long spentTime = end - start;
+        System.out.println("Sorted in " + spentTime + " ms");
     }
 
     public static void main(String[] args) {
         // faire une fois avant de traiter les donnees
         // MainApp mainApp = new MainApp();
         // mainApp.sortStopTimes();
-
+        Graph g = new Graph();
 
         System.out.println("loading ... ");
         long start = System.currentTimeMillis();
@@ -61,19 +61,20 @@ public class MainApp {
         nm.sync(); tm.sync(); rm.sync(); am.sync();
 
         long end = System.currentTimeMillis();
-        System.out.println(end - start);
+        long spentTime = end - start;
+        System.out.println("Loaded in " + spentTime + " ms");
 
         nm.calcMaxMinLongLat();
 
-        int size = nm.getSize() + tm.getSize() + rm.getSize() + am.getSize();
-        System.out.println("Size : " + size);
 
-        // ArrayList<Node> nodes = new ArrayList<>();
-        // nodes.add(nm.makeNode("STIB-4306"));
-        // nodes.add(nm.makeNode("STIB-1293"));
+        ArrayList<Node> nodes = new ArrayList<>();
+        nodes.add(nm.makeNode("STIB-4306"));
+        nodes.add(nm.makeNode("STIB-1293"));
 
-        // Graph g = new Graph();
-        // g.addVertices(nodes);
+        
+        g.addVertices(nodes);
+
+        am.findArcs(g.getVertex("STIB-4306"), g, nm, tm, rm);
 
 
         // Node source = g.getVertex("STIB-1293"); // gare du nord
@@ -88,7 +89,7 @@ public class MainApp {
         //     System.out.print(s);
         // }
 
-        // SimpleGraph.setGraph(g);
-        // SimpleGraph.draw();
+        SimpleGraph.setGraph(g);
+        SimpleGraph.draw();
     }
 }

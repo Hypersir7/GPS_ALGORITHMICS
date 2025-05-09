@@ -1,7 +1,10 @@
 package graphs;
 
+import java.util.ArrayList;
+
 import database.IndexedFileReader;
 import tools.Split;
+import tools.TimeConvertor;
 
 public class ArcMaker {
     String delijnPath;
@@ -44,30 +47,80 @@ public class ArcMaker {
         
     }
 
-    public Trip makeArc (String nodeId, NodeMaker nodeMaker, TripMaker tripMaker, RouteMaker routeMaker){
+    public void findArcs (Node node, Graph g, NodeMaker nodeMaker, TripMaker tripMaker, RouteMaker routeMaker){
+        String nodeId = node.getUniqueID();
         String company = nodeId.split("-")[0];
-        Trip t = null;
-        String line = "";
+        String lineInDB = "";
+        String nextLineInDB = "";
+        ArrayList<Integer> indexList;
+        
         switch (company) {
             case "DELIJN":
-                line = deljin.getLine(deljin.getIdIndex(nodeId));
+                indexList = deljin.getIndexList(nodeId);
+                for (int i : indexList){
+                    lineInDB = deljin.getLine(i);
+                    nextLineInDB = deljin.getLine(i + 1);
+                    if (lineInDB != null && nextLineInDB != null){
+                        makeArc(node, lineInDB, nextLineInDB, g, nodeMaker, tripMaker, routeMaker);
+                    }
+                }
+                
                 break;
         
             case "SNCB":
-                line = sncb.getLine(sncb.getIdIndex(nodeId));
+                indexList = sncb.getIndexList(nodeId);
+                for (int i : indexList){
+                    lineInDB = sncb.getLine(i);
+                    nextLineInDB = sncb.getLine(i + 1);
+                    if (lineInDB != null && nextLineInDB != null){
+                        makeArc(node, lineInDB, nextLineInDB, g, nodeMaker, tripMaker, routeMaker);
+                    }
+                }
                 break;
             case "STIB":
-                line = stib.getLine(stib.getIdIndex(nodeId));
+                indexList = stib.getIndexList(nodeId);
+                for (int i : indexList){
+                    lineInDB = stib.getLine(i);
+                    nextLineInDB = stib.getLine(i + 1);
+                    if (lineInDB != null && nextLineInDB != null){
+                        makeArc(node, lineInDB, nextLineInDB, g, nodeMaker, tripMaker, routeMaker);
+                    }
+                }
                 break;
             case "TEC":
-                line = tec.getLine(tec.getIdIndex(nodeId));
+                indexList = tec.getIndexList(nodeId);
+                for (int i : indexList){
+                    lineInDB = tec.getLine(i);
+                    nextLineInDB = tec.getLine(i + 1);
+                    if (lineInDB != null && nextLineInDB != null){
+                        makeArc(node, lineInDB, nextLineInDB, g, nodeMaker, tripMaker, routeMaker);
+                    }
+                }
                 break;
         }
-        if (!line.equals("")){
-            String [] tmp = Split.splitLine(line, ",", 2);
-            t = new Trip(tmp[0], tmp[1]);
+    }
+    
+    private void makeArc(Node node, String lineInDB, String nextLineInDB, Graph g, NodeMaker nodeMaker, TripMaker tripMaker, RouteMaker routeMaker){
+        String [] tmpA = Split.splitLine(lineInDB, ",", 4);
+        String [] tmpB = Split.splitLine(nextLineInDB, ",", 4);
+        String tripIdA = tmpA[0];
+        String tripIdB = tmpB[0];
+        if (tripIdA.equals(tripIdB)){ // alors on un arc 
+            Node destinationNode ;
+            if (g.getVertex(tmpB[2]) == null){
+                destinationNode = nodeMaker.makeNode(tmpB[2]);
+                g.addVertex(destinationNode);
+            }else{
+                destinationNode = g.getVertex(tmpB[2]);
+            }
+            Trip trip = tripMaker.makeTrip(tmpA[0]);
+            Route route = routeMaker.makeRoute(trip.getRouteId());
+            int departureTimeA = TimeConvertor.convertTimeToSeconds(tmpA[1]);
+            int departureTimeB = TimeConvertor.convertTimeToSeconds(tmpB[1]);
+            int weight = departureTimeB - departureTimeA;
+            node.addArc(destinationNode, weight, departureTimeA, route);
+            
         }
-        return t;
     }
 
     public int getSize(){

@@ -24,8 +24,8 @@ public class NodeMaker {
     double maxLatitude = Double.MIN_VALUE;
     double minLatitude = Double.MAX_VALUE;
 
-    double screenWidth = 1000; // 50000
-    double screenHeight = 1000; // 50000
+    double screenWidth = 2000; // 50000
+    double screenHeight = 2000; // 50000
     double scaleX = 1;
     double scaleY = 1;
     double offsetX = - (screenWidth / 2);
