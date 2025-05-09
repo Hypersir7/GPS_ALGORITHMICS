@@ -22,8 +22,8 @@ public class IndexedFileReader {
     private List<Long> lineOffsets; // a la position 0 on a le header
 
     private int hashMapKeyIndex;
-    private HashMap <String, Integer> idIndex ;
     private HashMap <Integer, String> indexId ;
+    private HashMap <String, ArrayList<Integer>> idIndexList ;
 
     private boolean isCalcMaxMinLongLat;
 
@@ -36,8 +36,8 @@ public class IndexedFileReader {
     // performance, on va calculer la longitude et latitude ici afin de lire une et une seule fois la base de donnees
         hashMapKeyIndex = newHashMapKeyIndex;
         isCalcMaxMinLongLat = calcMaxMinLongLat;
-        idIndex = new HashMap<>();
         indexId = new HashMap<>();
+        idIndexList = new HashMap<>();
         lineOffsets = new ArrayList<>();
         try {
             raf = new RandomAccessFile(filePath, "r");
@@ -58,8 +58,8 @@ public class IndexedFileReader {
     public IndexedFileReader(String filePath) {
         hashMapKeyIndex = 0;
         isCalcMaxMinLongLat = false;
-        idIndex = new HashMap<>();
         indexId = new HashMap<>();
+        idIndexList = new HashMap<>();
         lineOffsets = new ArrayList<>();
         try {
             raf = new RandomAccessFile(filePath, "r");
@@ -87,8 +87,14 @@ public class IndexedFileReader {
                 lineOffsets.add(raf.getFilePointer());
 
                 String [] tmp = Split.splitLine(line, ",", 4);
-                idIndex.put(tmp[hashMapKeyIndex], i);
                 indexId.put(i, tmp[hashMapKeyIndex]);
+                if (idIndexList.containsKey(tmp[hashMapKeyIndex])){
+                    idIndexList.get(tmp[hashMapKeyIndex]).add(i);
+                }else {
+                    ArrayList<Integer> tmpArrayList = new ArrayList<>();
+                    tmpArrayList.add(i);
+                    idIndexList.put(tmp[hashMapKeyIndex], tmpArrayList);
+                }
                 if (isCalcMaxMinLongLat && i != 0){ // ce calcul est ici pour la performence 
                     double longitude = Double.parseDouble(tmp[2]);
                     double latitude = Double.parseDouble(tmp[3]);
@@ -137,7 +143,15 @@ public class IndexedFileReader {
             while ((line = reader.readLine()) != null) {
                 String [] tmp = Split.splitLine(line, ",", 2);
                 lineOffsets.add(Long.parseLong(tmp[0]));
-                idIndex.put(tmp[1], i);
+
+                if (idIndexList.containsKey(tmp[1])){
+                    idIndexList.get(tmp[1]).add(i);
+                }else {
+                    ArrayList<Integer> tmpArrayList = new ArrayList<>();
+                    tmpArrayList.add(i);
+                    idIndexList.put(tmp[1], tmpArrayList);
+                }
+
                 i++;
             }
         } catch (IOException e) {
@@ -161,7 +175,7 @@ public class IndexedFileReader {
     }
 
     public int getIdIndex(String Id){
-        return idIndex.get(Id);
+        return idIndexList.get(Id).get(0);
     }
 
     public String getId (int index){
@@ -171,7 +185,11 @@ public class IndexedFileReader {
     }
 
     public int getSize(){
-        return idIndex.size();
+        int count = 0 ;
+        for (ArrayList<Integer> lis : idIndexList.values()){
+            count += lis.size();
+        }
+        return count;
     }
 
     public double getMaxLongitude(){
@@ -206,5 +224,9 @@ public class IndexedFileReader {
         }else{
             return 0;
         }
+    }
+
+    public ArrayList<Integer> getIndexList(String id){
+        return idIndexList.get(id);
     }
 }

@@ -26,16 +26,16 @@ public class ArcMaker {
         tecPath = p4;
 
         t1 = new Thread(() -> {
-            deljin = new IndexedFileReader(delijnPath);
+            deljin = new IndexedFileReader(delijnPath, 2, false);
         });
         t2 = new Thread(() -> {
-            sncb = new IndexedFileReader(sncbPath);
+            sncb = new IndexedFileReader(sncbPath, 2, false);
         });
         t3 = new Thread(() -> {
-            stib = new IndexedFileReader(stibPath);
+            stib = new IndexedFileReader(stibPath, 2, false);
         });
         t4 = new Thread(() -> {
-            tec = new IndexedFileReader(tecPath);
+            tec = new IndexedFileReader(tecPath, 2, false);
         });
         t1.start();
         t2.start();
