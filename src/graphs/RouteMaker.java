@@ -43,23 +43,23 @@ public class RouteMaker {
         t4.start();
         
     }
-    public Route makeNode (String nodeId){
-        String company = nodeId.split("-")[0];
+    public Route makeRoute (String routeId){
+        String company = routeId.split("-")[0];
         Route r = null;
         String line = "";
         switch (company) {
             case "DELIJN":
-                line = deljin.getLine(deljin.getIdIndex(nodeId));
+                line = deljin.getLine(deljin.getIdIndex(routeId));
                 break;
         
             case "SNCB":
-                line = sncb.getLine(sncb.getIdIndex(nodeId));
+                line = sncb.getLine(sncb.getIdIndex(routeId));
                 break;
             case "STIB":
-                line = stib.getLine(stib.getIdIndex(nodeId));
+                line = stib.getLine(stib.getIdIndex(routeId));
                 break;
             case "TEC":
-                line = tec.getLine(tec.getIdIndex(nodeId));
+                line = tec.getLine(tec.getIdIndex(routeId));
                 break;
         }
         if (!line.equals("")){

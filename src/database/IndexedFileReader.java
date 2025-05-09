@@ -1,7 +1,14 @@
 package database;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,6 +23,7 @@ public class IndexedFileReader {
 
     private int hashMapKeyIndex;
     private HashMap <String, Integer> idIndex ;
+    private HashMap <Integer, String> indexId ;
 
     private boolean isCalcMaxMinLongLat;
 
@@ -29,24 +37,42 @@ public class IndexedFileReader {
         hashMapKeyIndex = newHashMapKeyIndex;
         isCalcMaxMinLongLat = calcMaxMinLongLat;
         idIndex = new HashMap<>();
+        indexId = new HashMap<>();
         lineOffsets = new ArrayList<>();
         try {
             raf = new RandomAccessFile(filePath, "r");
         } catch(IOException e){e.printStackTrace();}
         
-        buildIndex();
+        String indexedFilePath = filePath.replace(".csv", "Indexed.csv");
+        Path path = Paths.get(indexedFilePath);
+        if (Files.exists(path)){
+            readIndexedFile(path);
+        }else{
+            buildIndex();
+            writeIndexedFile(path);
+        }
+
+        
     }
 
     public IndexedFileReader(String filePath) {
         hashMapKeyIndex = 0;
         isCalcMaxMinLongLat = false;
         idIndex = new HashMap<>();
+        indexId = new HashMap<>();
         lineOffsets = new ArrayList<>();
         try {
             raf = new RandomAccessFile(filePath, "r");
         } catch(IOException e){e.printStackTrace();}
         
-        buildIndex();
+        String indexedFilePath = filePath.replace(".csv", "Indexed.csv");
+        Path path = Paths.get(indexedFilePath);
+        if (Files.exists(path)){
+            readIndexedFile(path);
+        }else{
+            buildIndex();
+            writeIndexedFile(path);
+        }
     }
 
     private void buildIndex() {
@@ -59,13 +85,11 @@ public class IndexedFileReader {
                     continue;
                 }
                 lineOffsets.add(raf.getFilePointer());
-                if (i == 0){
-                    i++;
-                    continue;
-                }
+
                 String [] tmp = Split.splitLine(line, ",", 4);
                 idIndex.put(tmp[hashMapKeyIndex], i);
-                if (isCalcMaxMinLongLat){ // ce calcul est ici pour la performence 
+                indexId.put(i, tmp[hashMapKeyIndex]);
+                if (isCalcMaxMinLongLat && i != 0){ // ce calcul est ici pour la performence 
                     double longitude = Double.parseDouble(tmp[2]);
                     double latitude = Double.parseDouble(tmp[3]);
                     if(longitude < minLongitude) minLongitude = longitude;
@@ -77,6 +101,48 @@ public class IndexedFileReader {
             }
         } catch(IOException e){e.printStackTrace();}
         
+    }
+
+    private void writeIndexedFile(Path path){
+        try (BufferedWriter writer = Files.newBufferedWriter(path, StandardCharsets.UTF_8,
+                                                             StandardOpenOption.CREATE,
+                                                             StandardOpenOption.APPEND)) {
+            if (isCalcMaxMinLongLat){
+                writer.write(String.valueOf(maxLongitude) + "," + String.valueOf(minLongitude) + "," +
+                String.valueOf(maxLatitude) + "," + String.valueOf(minLatitude));
+                writer.newLine();
+            }
+            for (int i = 0; i < lineOffsets.size(); i ++){
+                writer.write(String.valueOf(lineOffsets.get(i)) + "," + indexId.get(i));
+                writer.newLine();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void readIndexedFile (Path path){
+
+        try (BufferedReader reader = Files.newBufferedReader(path)) {
+            String line ;
+            if (isCalcMaxMinLongLat){
+                line = reader.readLine();
+                String [] tmp = Split.splitLine(line, ",", 4);
+                maxLongitude = Double.parseDouble(tmp[0]);
+                minLongitude = Double.parseDouble(tmp[1]);
+                maxLatitude = Double.parseDouble(tmp[2]);
+                minLatitude = Double.parseDouble(tmp[3]);
+            }
+            int i = 0;
+            while ((line = reader.readLine()) != null) {
+                String [] tmp = Split.splitLine(line, ",", 2);
+                lineOffsets.add(Long.parseLong(tmp[0]));
+                idIndex.put(tmp[1], i);
+                i++;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public String getLine(int j) {

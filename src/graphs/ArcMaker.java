@@ -3,7 +3,7 @@ package graphs;
 import database.IndexedFileReader;
 import tools.Split;
 
-public class TripMaker {
+public class ArcMaker {
     String delijnPath;
     String sncbPath;
     String stibPath;
@@ -19,7 +19,7 @@ public class TripMaker {
     Thread t3 ;
     Thread t4 ;
 
-    public TripMaker(String p1, String p2, String p3, String p4){
+    public ArcMaker(String p1, String p2, String p3, String p4){
         delijnPath = p1;
         sncbPath = p2;
         stibPath = p3;
@@ -44,23 +44,23 @@ public class TripMaker {
         
     }
 
-    public Trip makeTrip (String tripId){
-        String company = tripId.split("-")[0];
+    public Trip makeArc (String nodeId, NodeMaker nodeMaker, TripMaker tripMaker, RouteMaker routeMaker){
+        String company = nodeId.split("-")[0];
         Trip t = null;
         String line = "";
         switch (company) {
             case "DELIJN":
-                line = deljin.getLine(deljin.getIdIndex(tripId));
+                line = deljin.getLine(deljin.getIdIndex(nodeId));
                 break;
         
             case "SNCB":
-                line = sncb.getLine(sncb.getIdIndex(tripId));
+                line = sncb.getLine(sncb.getIdIndex(nodeId));
                 break;
             case "STIB":
-                line = stib.getLine(stib.getIdIndex(tripId));
+                line = stib.getLine(stib.getIdIndex(nodeId));
                 break;
             case "TEC":
-                line = tec.getLine(tec.getIdIndex(tripId));
+                line = tec.getLine(tec.getIdIndex(nodeId));
                 break;
         }
         if (!line.equals("")){
@@ -84,4 +84,5 @@ public class TripMaker {
             e.printStackTrace();
         }
     }
+    
 }

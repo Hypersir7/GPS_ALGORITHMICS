@@ -1,6 +1,7 @@
 
 import java.util.ArrayList;
 
+import graphs.ArcMaker;
 import graphs.Graph;
 import graphs.Node;
 import graphs.NodeMaker;
@@ -35,20 +36,21 @@ public class MainApp {
         String TECTripsFilePath = "src/database/GTFS/TEC/trips.csv";
         String TECRoutesFilePath = "src/database/GTFS/TEC/routes.csv";
 
-
+        System.out.println("loading ... ");
         long start = System.currentTimeMillis();
         NodeMaker nm = new NodeMaker(DELIJNStopsFilePath, SNCBStopsFilePath, STIBStopsFilePath, TECStopsFilePath);
         TripMaker tm = new TripMaker(DELIJNTripsFilePath, SNCBTripsFilePath, STIBTripsFilePath, TECTripsFilePath);
         RouteMaker rm = new RouteMaker(DELIJNRoutesFilePath, SNCBRoutesFilePath, STIBRoutesFilePath, TECRoutesFilePath);
+        ArcMaker am = new ArcMaker(DELIJNStopTimesFilePath, SNCBStopTimesFilePath, STIBStopTimesFilePath, TECStopTimesFilePath);
 
-        nm.sync(); tm.sync(); rm.sync();
+        nm.sync(); tm.sync(); rm.sync(); am.sync();
 
         long end = System.currentTimeMillis();
         System.out.println(end - start);
 
         nm.calcMaxMinLongLat();
-        
-        int size = nm.getSize() + tm.getSize() + rm.getSize();
+
+        int size = nm.getSize() + tm.getSize() + rm.getSize() + am.getSize();
         System.out.println("Size : " + size);
 
         ArrayList<Node> nodes = new ArrayList<>();
