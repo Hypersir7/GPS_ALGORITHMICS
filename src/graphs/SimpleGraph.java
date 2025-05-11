@@ -139,6 +139,20 @@ public class SimpleGraph extends Application {
         graphGroup.getChildren().addAll(arrows);
         graphGroup.getChildren().addAll(circles);
         graphGroup.getChildren().addAll(texts);
+
+        // on veut commencer sur les sommets qu'on a dessine
+        graphGroup.applyCss();
+        graphGroup.layout();
+        double graphWidth = graphGroup.getBoundsInParent().getWidth();
+        double graphHeight = graphGroup.getBoundsInParent().getHeight();
+        double paneCenterX = 900 / 2.0;
+        double paneCenterY = 700 / 2.0;
+        double graphCenterX = graphGroup.getBoundsInParent().getMinX() + graphWidth / 2;
+        double graphCenterY = graphGroup.getBoundsInParent().getMinY() + graphHeight / 2;
+
+        graphGroup.setTranslateX(paneCenterX - graphCenterX);
+        graphGroup.setTranslateY(paneCenterY - graphCenterY);
+
         pane.getChildren().add(graphGroup);
         
 

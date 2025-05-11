@@ -113,6 +113,7 @@ public class ArcMaker {
             }else{
                 destinationNode = g.getVertex(tmpB[2]);
             }
+
             Trip trip = tripMaker.makeTrip(tmpA[0]);
             Route route = routeMaker.makeRoute(trip.getRouteId());
             int departureTimeA = TimeConvertor.convertTimeToSeconds(tmpA[1]);

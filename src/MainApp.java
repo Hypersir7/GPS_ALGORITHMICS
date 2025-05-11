@@ -1,37 +1,19 @@
 
 import java.util.ArrayList;
 
-import graphs.ArcMaker;
 import graphs.Graph;
 import graphs.Node;
-import graphs.NodeMaker;
-import graphs.RouteMaker;
 import graphs.SimpleGraph;
-import graphs.TripMaker;
 import tools.SortStopTimes;
 import algorithms.dijkstra;
 
 public class MainApp {
 
-    static String DELIJNStopsFilePath = "src/database/GTFS/DELIJN/stops.csv";
     static String DELIJNStopTimesFilePath = "src/database/GTFS/DELIJN/stop_times.csv";
-    static String DELIJNTripsFilePath = "src/database/GTFS/DELIJN/trips.csv";
-    static String DELIJNRoutesFilePath = "src/database/GTFS/DELIJN/routes.csv";
-
-    static String SNCBStopsFilePath = "src/database/GTFS/SNCB/stops.csv";
     static String SNCBStopTimesFilePath = "src/database/GTFS/SNCB/stop_times.csv";
-    static String SNCBTripsFilePath = "src/database/GTFS/SNCB/trips.csv";
-    static String SNCBRoutesFilePath = "src/database/GTFS/SNCB/routes.csv";
-
-    static String STIBStopsFilePath = "src/database/GTFS/STIB/stops.csv";
     static String STIBStopTimesFilePath = "src/database/GTFS/STIB/stop_times.csv";
-    static String STIBTripsFilePath = "src/database/GTFS/STIB/trips.csv";
-    static String STIBRoutesFilePath = "src/database/GTFS/STIB/routes.csv";
-
-    static String TECStopsFilePath = "src/database/GTFS/TEC/stops.csv";
     static String TECStopTimesFilePath = "src/database/GTFS/TEC/stop_times.csv";
-    static String TECTripsFilePath = "src/database/GTFS/TEC/trips.csv";
-    static String TECRoutesFilePath = "src/database/GTFS/TEC/routes.csv";
+
     
     public void sortStopTimes(){
         System.out.println("Sorting ...");
@@ -49,45 +31,31 @@ public class MainApp {
         // faire une fois avant de traiter les donnees
         // MainApp mainApp = new MainApp();
         // mainApp.sortStopTimes();
+
         Graph g = new Graph();
 
-        System.out.println("loading ... ");
-        long start = System.currentTimeMillis();
-        NodeMaker nm = new NodeMaker(DELIJNStopsFilePath, SNCBStopsFilePath, STIBStopsFilePath, TECStopsFilePath);
-        TripMaker tm = new TripMaker(DELIJNTripsFilePath, SNCBTripsFilePath, STIBTripsFilePath, TECTripsFilePath);
-        RouteMaker rm = new RouteMaker(DELIJNRoutesFilePath, SNCBRoutesFilePath, STIBRoutesFilePath, TECRoutesFilePath);
-        ArcMaker am = new ArcMaker(DELIJNStopTimesFilePath, SNCBStopTimesFilePath, STIBStopTimesFilePath, TECStopTimesFilePath);
+        Node source = g.makeVertex("STIB-4306"); // etterbeek
+        Node destination = g.makeVertex("STIB-3559"); // ulb
 
-        nm.sync(); tm.sync(); rm.sync(); am.sync();
+        System.out.println("Source : " + source.getNodeName());
+        System.out.println("Destination : " + destination.getNodeName());
+
+
+        System.out.println("Searching ...");
+        long start = System.currentTimeMillis();
+
+        System.out.println("Result : ");
+
+        dijkstra dij = new dijkstra();
+        ArrayList<String> chemin =  dij.getShortestPath(g, source, destination, 8 * 3600 + 15 * 60);
 
         long end = System.currentTimeMillis();
-        long spentTime = end - start;
-        System.out.println("Loaded in " + spentTime + " ms");
+        long duration = end - start;
+        System.out.println("Search ended in : " + duration + " ms");
 
-        nm.calcMaxMinLongLat();
-
-
-        ArrayList<Node> nodes = new ArrayList<>();
-        nodes.add(nm.makeNode("STIB-4306"));
-        nodes.add(nm.makeNode("STIB-1293"));
-
-        
-        g.addVertices(nodes);
-
-        am.findArcs(g.getVertex("STIB-4306"), g, nm, tm, rm);
-
-
-        // Node source = g.getVertex("STIB-1293"); // gare du nord
-        // Node destination = g.getVertex("STIB-4306"); // etterbeek
-
-        // System.out.println("Source : " + source.getNodeName());
-        // System.out.println("Destination : " + destination.getNodeName());
-
-        // dijkstra dij = new dijkstra();
-        // ArrayList<String> chemin =  dij.getShortestPath(g, source, destination, 8 * 3600 + 15 * 60);
-        // for (String s : chemin){
-        //     System.out.print(s);
-        // }
+        for (String s : chemin){
+            System.out.print(s);
+        }
 
         SimpleGraph.setGraph(g);
         SimpleGraph.draw();

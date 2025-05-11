@@ -16,15 +16,14 @@ public class dijkstra {
 
         // tout d'abord on trouve le plus court chemin et apres on track back pour donner le plus court chemin
 
-        ArrayList<Node> vertices = graph.getVertices();
         int sourceIndex = graph.getVertexIndex(source);
         int destinationIndex = graph.getVertexIndex(destination);
 
-        boolean [] isVisited = new boolean[vertices.size()];
-        double [] distanceTo = new double[vertices.size()];
-        double [] currentTime = new double[vertices.size()];
-        int [] previousVertex = new int[vertices.size()];
-        Arc [] previousArc = new Arc[vertices.size()];
+        boolean [] isVisited = new boolean[graph.getVertexCount()];
+        double [] distanceTo = new double[graph.getVertexCount()];
+        double [] currentTime = new double[graph.getVertexCount()];
+        int [] previousVertex = new int[graph.getVertexCount()];
+        Arc [] previousArc = new Arc[graph.getVertexCount()];
 
         Arrays.fill(distanceTo, Integer.MAX_VALUE);
         Arrays.fill(currentTime, -1);
@@ -39,6 +38,9 @@ public class dijkstra {
         while (!pq.isEmpty()) {
             int idx = pq.poll();
             if (idx == destinationIndex){break;}
+            if (graph.getVertex(idx).getNeighbours().isEmpty()){
+                graph.connectVertex(graph.getVertex(idx)); // charger les sommets et arrets du disk dur avant de calculer
+            }
             for (Arc arc : graph.getVertex(idx).getNeighbours()){
                 int v = graph.getVertexIndex(arc.getDestination());
                 if (isVisited[v]){continue;}
@@ -86,23 +88,24 @@ public class dijkstra {
             Node vertexSource = arc.getSource();
             Node vertexDestination = arc.getDestination();
             tripLength ++;
-            if ((!arc.getRoute().getShortName().equals(transportShortName))){
+            if ((!arc.getRoute().getShortName().equals(transportShortName))){ // changement de transport
                 res.add(vertexSource.getNodeName() + " " + convertSecondsToHours(currentTime[graph.getVertexIndex(vertexSource)]) + "\n");
                 tripLength = 1;
                 transportShortName = arc.getRoute().getShortName();
                 
             }
-            if (i == importantArcs.size() - 1){
+
+            if (tripLength == 1){ //  && i != importantArcs.size() - 1
+                res.add("Take " + arc.getRoute().getRouteID().substring(0, 4) + " " +
+                arc.getRoute().getTransportType() + " " + arc.getRoute().getShortName() + " from " + 
+                vertexSource.getNodeName() + " " + convertSecondsToHours(currentTime[graph.getVertexIndex(vertexSource)]) + " to ");
+            }
+
+            if (i == importantArcs.size() - 1){ // arrive vers la destination
                 res.add(vertexDestination.getNodeName() + " " + convertSecondsToHours(currentTime[graph.getVertexIndex(vertexDestination)]) + "\n");
                 break;
             }
 
-            if (tripLength == 1 && i != importantArcs.size() - 1){
-                res.add("Take " + arc.getRoute().getRouteID().substring(0, 4) + " " +
-                arc.getRoute().getTransportType() + " " + arc.getRoute().getShortName() + " from " + 
-                vertexSource.getNodeName() + " " + convertSecondsToHours(currentTime[graph.getVertexIndex(vertexSource)]) + " to ");
-
-            }
             i ++;
         }
 
