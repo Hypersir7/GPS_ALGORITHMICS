@@ -74,7 +74,7 @@ public class dijkstra {
             stopsOfPath.add(currentNode);
             if (previousArc[currentNode] != null){
                 importantArcs.add(previousArc[currentNode]);
-                previousArc[currentNode].select();
+                previousArc[currentNode].select(); // slectionne
             }
             currentNode = previousVertex[currentNode];
         }

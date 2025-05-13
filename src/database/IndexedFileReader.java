@@ -65,7 +65,7 @@ public class IndexedFileReader {
             raf = new RandomAccessFile(filePath, "r");
         } catch(IOException e){e.printStackTrace();}
         
-        String indexedFilePath = filePath.replace(".csv", "Indexed.csv");
+        String indexedFilePath = filePath.replace(".csv", "Indexed.csv"); // [NOTE]: FAUT QUE J'EN PARLE DANS LE RAPPORT
         Path path = Paths.get(indexedFilePath);
         if (Files.exists(path)){
             readIndexedFile(path);

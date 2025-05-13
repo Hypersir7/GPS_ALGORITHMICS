@@ -1,5 +1,6 @@
 
 import java.util.ArrayList;
+import java.util.Scanner;
 
 import graphs.Graph;
 import graphs.Node;
@@ -7,6 +8,8 @@ import graphs.SimpleGraph;
 import tools.SortStopTimes;
 import algorithms.dijkstra;
 
+import tools.CLI;
+import tools.TimeConvertor;
 public class MainApp {
 
     static String DELIJNStopTimesFilePath = "src/database/GTFS/DELIJN/stop_times.csv";
@@ -32,32 +35,79 @@ public class MainApp {
         // MainApp mainApp = new MainApp();
         // mainApp.sortStopTimes();
 
-        Graph g = new Graph();
-
-        Node source = g.makeVertex("STIB-4306"); // etterbeek
-        Node destination = g.makeVertex("STIB-3559"); // ulb
-
-        System.out.println("Source : " + source.getNodeName());
-        System.out.println("Destination : " + destination.getNodeName());
+        CLI.showLogo();
 
 
-        System.out.println("Searching ...");
-        long start = System.currentTimeMillis();
+        CLI.displayTypeWriter("       Menu Principal\n");
+        CLI.displayTypeWriter("[1] Trouver un itinéraire 🛂 \n");
+        CLI.displayTypeWriter("[2] Quitter l'appliation 👋\n");
+       
+        while (true) {
+            Scanner scanner = new Scanner(System.in);
 
-        System.out.println("Result : ");
+            CLI.displayTypeWriter("\n\n  VOTRE CHOIX(tapez 1 ou 2): \n");
+            System.out.print("> ");
+            String choice = scanner.nextLine().trim();
 
-        dijkstra dij = new dijkstra();
-        ArrayList<String> chemin =  dij.getShortestPath(g, source, destination, 8 * 3600 + 15 * 60);
+            if((choice.equals("2"))){
+                CLI.displayTypeWriter("Au revoir 👋\n");
+                break;
+            }else if(!(choice.equals("1"))){
+                CLI.displayTypeWriter("❌ Choix invalide!");
+                continue;
+            }else{
+                CLI.displayTypeWriter(" 🚏 Veuillez entrer l'identifiant de départ: ");
+                String srcStop_ID = scanner.nextLine();
 
-        long end = System.currentTimeMillis();
-        long duration = end - start;
-        System.out.println("Search ended in : " + duration + " ms");
+                CLI.displayTypeWriter(" 🚏 Veuillez entrer l'identifiant de destination: ");
+                String destStop_ID = scanner.nextLine();
 
-        for (String s : chemin){
-            System.out.print(s);
+                CLI.displayTypeWriter(" ⏱️ Veuillez entrer le temps de départ: ");
+                String departureTime = scanner.nextLine();
+                int timeInSeconds = TimeConvertor.convertTimeToSeconds(departureTime);
+                if(timeInSeconds == 0){
+                    System.out.println("❌ Format d'heure invalide!");
+                    continue;
+                }
+                Graph g = new Graph();
+
+
+                Node source = g.makeVertex(srcStop_ID); // Montgo
+                Node destination = g.makeVertex(destStop_ID); // ulb STIB-8081
+
+                CLI.displayTypeWriter("ℹ️  Source : " + source.getNodeName());System.out.println();
+                CLI.displayTypeWriter("📍Destination : " + destination.getNodeName());System.out.println();
+
+                System.out.println();
+                CLI.showSearchingStart();
+
+                long start = System.currentTimeMillis();
+
+                
+
+                dijkstra dij = new dijkstra();
+                ArrayList<String> chemin =  dij.getShortestPath(g, source, destination, 15 * 3600 + 32 * 60);
+
+                long end = System.currentTimeMillis();
+                long duration = end - start;
+                
+                System.out.println();
+                CLI.showSearchingEnd(duration);;
+                
+                System.out.println();
+                CLI.showResultTitle();
+                
+                System.out.println();
+                for (String s : chemin){
+                    CLI.displayTypeWriter(s);System.out.println();
+                }
+
+                SimpleGraph.setGraph(g);
+                SimpleGraph.draw();
+            }
+            
+            }
+
         }
 
-        SimpleGraph.setGraph(g);
-        SimpleGraph.draw();
-    }
 }
